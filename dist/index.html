@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Choose EnterpriseWallet Type</title>
+	<link rel="stylesheet" href="app.css">
+</head>
+<body>
+	<div class="flex-container">
+		<div class="wrapper">
+			<header class="header">
+				<table class="home-reset" onclick="reset()">
+					<tr>
+						<td><img src="img/factom-foundation_mark.svg"></td>
+						<td><h1 style="padding-left: 90px;"> Choose your generation method</h1></td>
+					</tr>
+				</table>
+			</header>
+			<content class="main" id="level-one">
+				<div class="option encased" id="secure" onclick="select(true)" onmouseover="secureHover(true)" onmouseleave="secureHover(false)">
+					<h2>Random Address</h2>
+					<p>This will generate addresses at random. Each address has no tie to the one before it, and you trust the randomness of the random number generator. Each address must be backed up individually.</p>  
+				</div>
+				<div class="option encased" id="normal" onclick="select(false)" onmouseover="normalHover(true)" onmouseleave="normalHover(false)">
+					<h2>From a Seed</h2>
+					<p>This will generate addresses deriving from a seed, meaning you only need to back up the seed. You can derive these addresses again from the same seed.</p>  
+				</div>
+			</content>
+			<content class="main" id="secure-second" style="display: none;">
+				<div class="encased full" style="text-align: center;">
+					<h2>Random Address</h2>
+					<div class="description" style="text-align: center;margin-top: -10px;">
+						<pre id="private-key">...</pre>
+						<pre id="public-key">...</pre>
+					</div>
+					<button style="font-size: 15px;" id="random-address-button">Click for a random address</button>
+				</div>
+			</content>
+			<content class="main" id="normal-second" style="display: none;">
+				<div class="encased full">
+					<h2>From a seed</h2>
+					<p>Will generate a table of the first 10 factoid addresses generated from a seed</p>
+					<div class="description" style="width:100%;">
+						<div style="color: color: #407ba4; display: none;" id="seed-display-container">
+							Seed inputted: 
+							<pre style="display: inline;">"<span id="seed-inputted" style="color:black;"></span>"</pre>
+						</div>
+						<table cellspacing="0" cellpadding="0" border="0" style="width:90%; margin: 0 auto;">
+							<tr>
+								<td>
+									<pre style="width:100%; overflow:auto;display: none;" id="address-table-container">
+										<table id="address-table" cellspacing="0" cellpadding="1" border="1" width="900">  
+										</table>  
+									</pre>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<label id="seed-label" for="seed">Input the wallet seed to be used</label>
+					<label id="seed-label-error" for="seed" style="display: none; color:red; font-size: 1em;"></label>
+					<table style="width: 80%;">
+						<tr>
+							<td style="width: 35%"></td>
+							<td style="width: 40%">
+								<input id="seed-input" type="text" id="seed" name="firstname" placeholder="">
+							</td>
+							<td style="width: 25%; text-align: left;">
+								<button id="choose-seed"> Choose seed </button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</content>
+
+			<footer class="footer">
+			The actual randomness of the random number generator has not been tested. This is just an example of using the npm libraries. Use at your own risk.
+			<br />
+			<div class="encased full" id="validate-container" style="width: 65%; margin: 0 auto; margin-top: 25px;">
+				<h2>Validate a key</h2>
+				<input id="validate-key" type="text" id="seed" placeholder="Input a key starting with either 'Fs...' or 'Fa...'">
+				<button id="verify"> Verify </button>
+				<div id="verify-result">
+					
+				</div>
+			</div>	
+			</footer>
+		</div>
+	</div>
+</body>
+
+<script src="js/apprun.js"></script>
+
+<script>
+	function reset() {
+		document.getElementById("secure-second").style.display = "none"
+		document.getElementById("normal-second").style.display = "none"
+		document.getElementById("level-one").style.opacity = 100
+		document.getElementById("level-one").style.display = "flex"
+		document.getElementById("password-label-error").style.display = "none"
+		document.getElementById("password-label").style.display = "block"
+		document.getElementById("secure-password-input").classList.remove("error")
+	}
+
+	function select(option) {
+	var top = document.getElementById("level-one") //.style.display = "none"
+	if(option) {
+		// Secure
+		var bot = document.getElementById("secure-second") // .style.display = "flex"
+		fade(top, bot)
+	} else {
+		// Not secure
+		var bot = document.getElementById("normal-second") //.style.display = "flex"
+		fade(top, bot)
+	}
+}
+
+function fade(outelem, inelem) {
+	outelem.style.opacity = "0"
+	setTimeout(
+		function Remove() {
+			outelem.style.display = "none"
+			inelem.style.display = "flex"
+		},
+		500 );
+}
+
+
+function secureHover(select) {
+	if(select) {
+		document.getElementById("secure").style.transform = "scale(1.05)";
+		document.getElementById("normal").style.transform = "scale(.95)";
+	} else {
+		document.getElementById("secure").style.transform = "scale(1)";
+		document.getElementById("normal").style.transform = "scale(1)";
+	}
+}
+
+function normalHover(select) {
+	if(select) {
+		document.getElementById("normal").style.transform = "scale(1.05)";
+		document.getElementById("secure").style.transform = "scale(.95)";
+	} else {
+		document.getElementById("normal").style.transform = "scale(1)";
+		document.getElementById("secure").style.transform = "scale(1)";
+	}
+}
+
+function checkValidPassword(dom) {
+	if(dom.value.length < 8) {
+		document.getElementById("password-label").style.display = "none"
+		document.getElementById("password-label-error").innerHTML = "Password must be at least 8 characters in length"
+		document.getElementById("password-label-error").style.display = "block"
+		dom.classList.add("error")
+		return false
+	}
+	return true
+}
+
+</script>
+
+</html>
